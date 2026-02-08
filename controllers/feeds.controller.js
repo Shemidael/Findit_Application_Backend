@@ -43,7 +43,9 @@ const FEED_ENDPOINTS = {
                     await v2.uploader.upload_stream({ resource_type: "auto" }, (error, result) => 
                         {
                             if (error) {
-                                return response.status(400).json({ message: 'No file uploaded' });
+                                console.log(error);
+                                
+                                return response.status(400).json({ message: 'Error uploading file !' });
                             };
                            image_url = result.secure_url; 
                     }).end(request.file.buffer);
@@ -159,3 +161,4 @@ const FEED_ENDPOINTS = {
 
 
 export default FEED_ENDPOINTS;
+
