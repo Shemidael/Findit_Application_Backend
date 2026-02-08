@@ -2,6 +2,8 @@ import Feed from "../models/feeds.model.js";
 
 import User from "../models/users.model.js";
 
+import { v2 } from "cloudinary";
+
 import { UploadToCloudinary } from "../configurations/cloudinary.js";
 
 const FEED_ENDPOINTS = {
@@ -35,8 +37,16 @@ const FEED_ENDPOINTS = {
             else {
 
                 try {
-                    
-                    let image_url = await UploadToCloudinary(request.file?.path);
+
+                    let image_url;
+
+                    await v2.uploader.upload_stream({ resource_type: "auto" }, (error, result) => 
+                        {
+                            if (error) {
+                                return response.status(400).json({ message: 'No file uploaded' });
+                            };
+                           image_url = result.secure_url; 
+                    }).end(request.file.buffer);
     
                     let new_feed = new Feed({
     
@@ -146,5 +156,6 @@ const FEED_ENDPOINTS = {
         }
     }
 };
+
 
 export default FEED_ENDPOINTS;
